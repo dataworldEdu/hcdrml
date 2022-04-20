@@ -1,1 +1,2 @@
-# Home Credit Default Rist ML
+# Home Credit Default Risk Machine Learning App
+
