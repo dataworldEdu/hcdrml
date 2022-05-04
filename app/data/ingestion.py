@@ -1,19 +1,9 @@
-def collect_application():
-    ...
+from csvdf import get_csv_data
+from sqldf import get_sql_data
 
 
-def collect_bureau():
-    ...
+def get_data(args: str):
+    if args == 'sql':
+        return get_sql_data()
 
-
-def collect_pos_cash_balance():
-    ...
-
-
-def installments_payments():
-    ...
-
-
-def credit_card_balance():
-    ...
-
+    return get_csv_data()
