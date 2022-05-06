@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from ..utils import aggregate_df
+from app import settings
 
 
 def read_bureau_csv_data() -> pd.DataFrame():
@@ -14,7 +15,7 @@ def read_bureau_csv_data() -> pd.DataFrame():
     bure_dtype = {
         'SK_ID_BUREAU': np.uint32, 'SK_ID_CURR': np.uint32
     }
-    bureau_df = pd.read_csv('/Users/jangsangik/PycharmProjects/hcdrml/data/raw/bureau.csv', dtype=bure_dtype)
+    bureau_df = pd.read_csv(f'{settings.DATA_ROOT_PATH}/raw/bureau.csv', dtype=bure_dtype)
     bureau_df.columns = bure_col
 
     bureau_group = bureau_df.groupby('SK_ID_CURR')

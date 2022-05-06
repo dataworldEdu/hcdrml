@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from app.data.utils import under_sampler
+from app import settings
 
 
 def read_application_train_csv_data() -> pd.DataFrame:
@@ -23,8 +24,7 @@ def read_application_train_csv_data() -> pd.DataFrame:
         'SK_ID_CURR': np.uint32
     }
 
-    app_df = pd.read_csv('/data/raw/application_train.csvdf', dtype=app_dtype)[
-        cols]
+    app_df = pd.read_csv(f'{settings.DATA_ROOT_PATH}/raw/application_train.csv', dtype=app_dtype)[cols]
     app_df = under_sampler(app_df, 'TARGET')
 
     return app_df

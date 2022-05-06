@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from app import settings
 from ..utils import aggregate_df
 
 
@@ -21,8 +22,7 @@ def read_previous_application_csv_data() -> pd.DataFrame:
         'SK_ID_PREV': np.uint32, 'SK_ID_CURR': np.uint32
     }
 
-    prev_app_df = \
-        pd.read_csv('/Users/jangsangik/PycharmProjects/hcdrml/data/raw/previous_application.csv', dtype=prev_dtype)
+    prev_app_df = pd.read_csv(f'{settings.DATA_ROOT_PATH}/raw/previous_application.csv', dtype=prev_dtype)
     prev_app_df.columns = pre_cols
 
     prev_group = prev_app_df.groupby('SK_ID_CURR')
@@ -30,5 +30,3 @@ def read_previous_application_csv_data() -> pd.DataFrame:
     prev_app_df = aggregate_df(prev_number_columns, prev_group)
 
     return prev_app_df
-
-

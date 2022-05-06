@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from app import settings
 from ..utils import aggregate_df
 
 
@@ -11,10 +12,9 @@ def read_installment_csv_data() -> pd.DataFrame():
         'AMT_PAYMENT': np.float32
     }
 
-    install_df= pd.read_csv('/Users/jangsangik/PycharmProjects/hcdrml/data/raw/installments_payments.csv',
-                               dtype=install_dtype)
+    install_df= pd.read_csv(f'{settings.DATA_ROOT_PATH}/raw/installments_payments.csv', dtype=install_dtype)
 
-    install_group = install_df.groupby('SK_ID_CUPR')
+    install_group = install_df.groupby('SK_ID_CURR')
     install_number_columns = install_df.dtypes[install_df.dtypes != 'object'].index.tolist()[2:]
 
     install_df = aggregate_df(install_number_columns, install_group)

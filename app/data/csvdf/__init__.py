@@ -12,18 +12,27 @@ def get_csv_data() -> pd.DataFrame:
     data = read_application_train_csv_data()
 
     data.merge(read_previous_application_csv_data(), on='SK_ID_CURR', how='left', indicator=True)
-    del data['_merge']
+    if '_merge' in data.columns:
+        del data['_merge']
 
     data.merge(read_bureau_csv_data(), on='SK_ID_CURR', how='left', indicator=True)
-    data = data.drop(['_merge'], axis=1)
+    if '_merge' in data.columns:
+        data = data.drop(['_merge'], axis=1)
 
     data.merge(read_post_cache_csv_data(), on='SK_ID_CURR', how='left', indicator=True)
-    data = data.drop(['_merge'], axis=1)
+    if '_merge' in data.columns:
+        data = data.drop(['_merge'], axis=1)
 
     data.merge(read_installment_csv_data(), on='SK_ID_CURR', how='left', indicator=True)
-    data = data.drop(['_merge'], axis=1)
+    if '_merge' in data.columns:
+        data = data.drop(['_merge'], axis=1)
 
     data.merge(read_credit_card_csv_data(), on='SK_ID_CURR', how='left', indicator=True)
-    data = data.drop(['_merge'], axis=1)
+    if '_merge' in data.columns:
+        data = data.drop(['_merge'], axis=1)
 
     return data
+
+
+if __name__ == '__main__':
+    get_csv_data()
