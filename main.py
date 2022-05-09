@@ -1,9 +1,9 @@
 import argparse
 from fastcore.transform import Pipeline
-from .data import ingestion, preprocessing
-from .model import lightgbm
+from app.data import ingestion, preprocessing
+from app.model import lightgbm
 
-parser = argparse.ArgumentParser
+parser = argparse.ArgumentParser(description='Python ML App')
 parser.add_argument('-s', '--start', help="Start Pipline Flow")
 parser.add_argument('-e', '--end', help='End Pipeline Flow')
 parser.add_argument('-t', '--test', help='Model Test')
