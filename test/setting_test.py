@@ -1,4 +1,4 @@
-from app.settings import settings
+from app import settings
 import unittest
 
 

@@ -4,10 +4,12 @@ from app.data import ingestion, preprocessing
 from app.model import lightgbm
 
 parser = argparse.ArgumentParser(description='Python ML App')
+parser.add_argument('-o', '--only', help='Only one process execute')
 parser.add_argument('-s', '--start', help="Start Pipline Flow")
 parser.add_argument('-e', '--end', help='End Pipeline Flow')
 parser.add_argument('-t', '--test', help='Model Test')
 parser.add_argument('-m', '--model', help="Model File")
+
 
 args = parser.parse_args()
 
@@ -23,7 +25,11 @@ def main():
         lightgbm.model_predict,
     ]
 
-    if args.start:
+    if args.only:
+        if args.only == 'ing':
+            all_flow_list = [ingestion.get_data]
+
+    elif args.start:
         if args.start == 'ing':
             ...
 
@@ -33,7 +39,7 @@ def main():
         elif args.start == 'model':
             ...
 
-    if args.end:
+    elif args.end:
         if args.end == 'prep':
             ...
         elif args.end == 'model':
@@ -46,7 +52,7 @@ def main():
             raise Exception
 
     pipe = Pipeline(all_flow_list)
-    pipe()
+    pipe(1)
 
 
 if __name__ == '__main__':

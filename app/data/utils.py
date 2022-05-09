@@ -1,4 +1,6 @@
 import pandas as pd
+from datetime import datetime
+from app import settings
 
 
 def under_sampler(df: pd.DataFrame, condition: str) -> pd.DataFrame:
@@ -20,3 +22,8 @@ def aggregate_df(cols: list, gr_df: pd.DataFrame) -> pd.DataFrame:
 
     agg_df = aggr_df.reset_index()
     return aggr_df
+
+
+def save_df_to_parquet(data: pd.DataFrame) -> pd.DataFrame:
+    data.to_parquet(f'{settings.DATA_ROOT_PATH}/processed/data_sample.parquet')
+    return data

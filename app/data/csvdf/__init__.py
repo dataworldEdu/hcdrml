@@ -32,7 +32,3 @@ def get_csv_data() -> pd.DataFrame:
         data = data.drop(['_merge'], axis=1)
 
     return data
-
-
-if __name__ == '__main__':
-    get_csv_data()
