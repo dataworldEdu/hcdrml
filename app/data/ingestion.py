@@ -1,11 +1,11 @@
 import pandas as pd
-from app.decorator import SaveParquet
+from app.decorator import save_parquet
 from .csvdf import get_csv_data
 from .sqldf import get_sql_data
 from ..enums import DataSourceType
 
 
-@SaveParquet
+@save_parquet
 def get_data(source: DataSourceType = DataSourceType.CSV) -> pd.DataFrame:
     """
     데이터 수집

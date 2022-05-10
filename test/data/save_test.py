@@ -1,6 +1,5 @@
 import unittest
 import pandas as pd
-import pyarrow as pa
 from pandas.util.testing import assert_frame_equal
 from app.data.ingestion import get_data
 
