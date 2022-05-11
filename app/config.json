@@ -1,0 +1,10 @@
+{
+  "DEVDB": {
+    "HOST": "hcdrdb",
+    "PORT": 3306,
+    "USER": "hcdr",
+    "PASSWD": "dataworld7789",
+    "DATABASE": "hcdrdb",
+    "CHARSET": "utf8"
+  }
+}
