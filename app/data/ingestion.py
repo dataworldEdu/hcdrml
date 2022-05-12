@@ -15,16 +15,9 @@ default_dir = './data/external/'
 filterwarnings('ignore')
 
 
-def logger_test():
-    logger.info('info')
-    logger.warning('warning')
-    logger.debug('debug')
-
-
 def train_model():
     try:
         # 데이터 취합
-        logger.debug('Step 1 - 데이터취합')
         apps = select_application_train()
 
         prev_agg = select_previous_application()
@@ -43,15 +36,10 @@ def train_model():
         apps_all = apps_all.merge(card_agg, on='SK_ID_CURR', how='left', indicator=False)
 
         #전처리 시작
-        logger.debug('Step 2')
-        logger.debug('Step 2 - NULL 처리')
-
         apps_all = preprocessing.fill_na(apps_all)
 
-        logger.debug('Step 2 - 원핫인코딩')
         apps_all = preprocessing.one_hot_encoding(apps_all)
 
-        logger.debug('Step 2 - 민맥스스캐일')
         # number type 확인 --> minmax, log
         num_columns = apps_all.dtypes[apps_all.dtypes != 'object'].index.tolist()
         #num_columns = num_columns[2:]
@@ -91,16 +79,12 @@ def train_model():
         valid_x = valid_x.drop(['SK_ID_CURR', 'TARGET'], axis=1)
 
         # 학습 차수 조회
-        sql = "SELECT IFNUll(MAX(LNG_DGR),0) + 1 AS NEXT_DGR FROM MDLL WHERE MDL_CODE = '22010001'"
+        sql = "SELECT IFNUll(MAX(LNG_DGR),0) + 1 AS NEXT_DGR FROM MDLL WHERE MDL_CODE = '2201'"
 
         db = utils.create_engine()
         conn = db.connect()
         next_dgr = pd.read_sql(sql, conn)
         next_dgr = next_dgr['NEXT_DGR'].max()
-
-        logger.debug('next_dgr')
-        logger.debug(next_dgr)
-
 
         # lightGBM 학습
         lgbm = lightgbm.LightGBM()
@@ -138,7 +122,6 @@ def select_application_train():
     db.dispose()
 
     apps = utils.under_sampler(apps, 'TARGET')
-    apps = apps.head(10000)
 
     return apps
 
@@ -379,8 +362,6 @@ def collect_installments_payments():
 
     engine = utils.create_engine()
 
-    logger.info(install_agg.columns)
-
     install_agg.to_sql('INSTALLMENTS_PAYMENTS', engine, chunksize=1000, if_exists='append', method='multi', index=False)
 
     logger.info('collect_installments_payments end!!!')
@@ -418,8 +399,6 @@ def collect_credit_card_balance():
     card_agg['LAST_CHG_DT'] = now
 
     engine = utils.create_engine()
-
-    logger.info(card_agg.columns)
 
     card_agg.to_sql('CREDIT_CARD_BALANCE', engine, chunksize=1000, if_exists='append', method='multi', index=False)
 

@@ -2,9 +2,6 @@ import pandas as pd
 import sqlalchemy
 from sqlalchemy import event
 from .. import config
-from app.common import logger
-
-logger = logger.getLogger(__name__)
 
 
 def under_sampler(df: pd.DataFrame, condition: str) -> pd.DataFrame:

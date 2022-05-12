@@ -6,7 +6,6 @@ from ..common import utils as c_utils
 from app.data import utils
 from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
 
-
 logger = logger.getLogger(__name__)
 default_dir = './models/'
 
@@ -44,27 +43,24 @@ class LightGBM:
         y_pred = clf.predict(valid_x)
         acc_rto, pre_rto, rec_rto = self.func_print_stats(y_pred, valid_y)
 
-        insert_df = pd.DataFrame()
-        insert_df['MDL_CODE'] = '22010001'
-        insert_df['LNG_DGR'] = str(next_dgr)
-        insert_df['ACC_RTO'] = acc_rto
-        insert_df['PRE_RTO'] = pre_rto
-        insert_df['REC_RTO'] = rec_rto
-        insert_df['APLY_YN'] = 'N'
+        sql = "INSERT INTO MDLL (MDL_CODE, LNG_DGR, ACC_RTO, PRE_RTO, REC_RTO, APLY_YN, FRST_RGTR, FRST_REG_DT" \
+              ", LAST_CHNRG, LAST_CHG_DT) VALUES (%s, %s, %s, %s, %s, 'N', 'hcdr_api', %s, 'hcdr_api', %s)"
+
         now = c_utils.strnow()
-        insert_df['FRST_RGTR'] = 'INIT_PYTHON'
-        insert_df['FRST_REG_DT'] = now
-        insert_df['LAST_CHNRG'] = 'INIT_PYTHON'
-        insert_df['LAST_CHG_DT'] = now
 
-        engine = utils.create_engine()
+        db = utils.create_engine()
+        conn = db.connect()
 
-        insert_df.to_sql('MDLL', engine,  if_exists='append')
+        conn.execute(sql, ('2201', next_dgr, acc_rto, pre_rto, rec_rto, now, now))
+
+        conn.close()
+        db.dispose()
 
         # 모델파일 생성
-        modelPath = os.path.join(default_dir, 'lightgbm/')
-        os.chdir(modelPath)
-        joblib.dump(clf, 'toyProjLGBM_Md.h5')
+        modelPath = os.path.join(default_dir, 'lightgbm/', str(next_dgr))
+        os.makedirs(modelPath, exist_ok=True)
+
+        joblib.dump(clf, modelPath + '/toyProjLGBM_Md.h5')
 
         # 모델파일 로드
         # os.chdir(modelPath)
@@ -74,7 +70,5 @@ class LightGBM:
 
     # 결과 확인 함수
     def func_print_stats(self, predictions, labels):
-        logger.info("Accuracy = {}".format(accuracy_score(labels, predictions)))
-        logger.info("Precision = {}".format(precision_score(labels, predictions)))
-        logger.info("Recall = {}".format(recall_score(labels, predictions)))
-        return accuracy_score(labels, predictions), precision_score(labels, predictions), recall_score(labels, predictions)
+        return accuracy_score(labels, predictions), precision_score(labels, predictions), recall_score(labels,
+                                                                                                       predictions)
